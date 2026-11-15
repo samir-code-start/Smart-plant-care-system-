@@ -2,7 +2,7 @@
 // Plant-contextual AI chat assistant using Gemini.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getGeminiClient, getGeminiModel } from './_shared/geminiClient.js';
+import { generateContentWithFallback } from './_shared/geminiClient.js';
 import { VALID_PLANT_IDS, VALID_GROWTH_STAGES } from './_shared/types.js';
 
 const PLANT_NAMES: Record<string, string> = {
@@ -64,45 +64,19 @@ Rules:
 
     // Add the current message if not already the last entry
     const lastEntry = contents[contents.length - 1];
-    if (!lastEntry || lastEntry.role !== 'user' || lastEntry.parts[0].text !== message.trim()) {
+    if (!lastEntry || lastEntry.role !== 'user' || lastEntry.parts[0]?.text !== message.trim()) {
       contents.push({
         role: 'user',
         parts: [{ text: message.trim() }],
       });
     }
 
-    // --- Call Gemini ---
-    const genai = getGeminiClient();
-    const model = getGeminiModel();
-
-    let reply = '';
-    try {
-      // Build conversation context for interactions API
-      const conversationContext = conversation_history?.length
-        ? conversation_history
-            .slice(-10)
-            .map((m: { role: string; text: string }) => `${m.role === 'model' ? 'Assistant' : 'User'}: ${m.text}`)
-            .join('\n') + `\nUser: ${message.trim()}`
-        : message.trim();
-
-      const interaction = await genai.interactions.create({
-        model,
-        input: conversationContext,
-        system_instruction: systemInstruction,
-      });
-      reply = interaction.output_text || '';
-    } catch {
-      const response = await genai.models.generateContent({
-        model,
-        contents,
-        config: {
-          systemInstruction,
-          temperature: 0.7,
-          maxOutputTokens: 1024,
-        },
-      });
-      reply = response.text || '';
-    }
+    // --- Call Gemini with automatic model fallback ---
+    const reply = await generateContentWithFallback(contents, {
+      systemInstruction,
+      temperature: 0.7,
+      maxOutputTokens: 1024,
+    });
 
     if (!reply) {
       return res.status(502).json({

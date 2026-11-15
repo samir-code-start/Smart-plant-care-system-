@@ -3,7 +3,7 @@
 // Only runs when user explicitly clicks the Analyse button.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getGeminiClient, getGeminiModel } from './_shared/geminiClient.js';
+import { generateContentWithFallback } from './_shared/geminiClient.js';
 import { VALID_PLANT_IDS, VALID_GROWTH_STAGES } from './_shared/types.js';
 
 // Plant data for context (mirrors predefinedPlants.ts)
@@ -92,30 +92,12 @@ Respond with a JSON object containing these fields:
 - care_recommendations (array of strings: 2-4 actionable recommendations)
 - warnings (array of strings: any critical warnings, can be empty)`;
 
-    // --- Call Gemini ---
-    const genai = getGeminiClient();
-    const model = getGeminiModel();
-
-    let responseText = '';
-    try {
-      const interaction = await genai.interactions.create({
-        model,
-        input: userPrompt,
-        system_instruction: systemInstruction,
-      });
-      responseText = interaction.output_text || '';
-    } catch {
-      const response = await genai.models.generateContent({
-        model,
-        contents: userPrompt,
-        config: {
-          systemInstruction,
-          responseMimeType: 'application/json',
-          temperature: 0.3,
-        },
-      });
-      responseText = response.text || '';
-    }
+    // --- Call Gemini with automatic model fallback ---
+    const responseText = await generateContentWithFallback(userPrompt, {
+      systemInstruction,
+      responseMimeType: 'application/json',
+      temperature: 0.3,
+    });
 
     if (!responseText) {
       return res.status(502).json({
