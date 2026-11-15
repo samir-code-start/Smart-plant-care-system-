@@ -2,7 +2,7 @@
 // Fetches the latest ThingSpeak reading and computes stale/online status.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { fetchLatestFeed } from './_shared/thingspeakClient';
+import { fetchLatestFeed } from './_shared/thingspeakClient.js';
 
 const STALE_THRESHOLD = parseInt(process.env.STALE_THRESHOLD_SECONDS || '120', 10);
 const OFFLINE_THRESHOLD = parseInt(process.env.OFFLINE_THRESHOLD_SECONDS || '300', 10);

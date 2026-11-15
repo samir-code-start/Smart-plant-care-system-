@@ -3,8 +3,8 @@
 // Only runs when user explicitly clicks the Analyse button.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getGeminiClient, getGeminiModel } from './_shared/geminiClient';
-import { VALID_PLANT_IDS, VALID_GROWTH_STAGES } from './_shared/types';
+import { getGeminiClient, getGeminiModel } from './_shared/geminiClient.js';
+import { VALID_PLANT_IDS, VALID_GROWTH_STAGES } from './_shared/types.js';
 
 // Plant data for context (mirrors predefinedPlants.ts)
 const PLANT_DATA: Record<string, { name: string; botanical: string; min: number; max: number; watering: string }> = {

@@ -2,8 +2,8 @@
 // Plant-contextual AI chat assistant using Gemini.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getGeminiClient, getGeminiModel } from './_shared/geminiClient';
-import { VALID_PLANT_IDS, VALID_GROWTH_STAGES } from './_shared/types';
+import { getGeminiClient, getGeminiModel } from './_shared/geminiClient.js';
+import { VALID_PLANT_IDS, VALID_GROWTH_STAGES } from './_shared/types.js';
 
 const PLANT_NAMES: Record<string, string> = {
   'tomato': 'Tomato', 'basil': 'Basil', 'aloe-vera': 'Aloe Vera',

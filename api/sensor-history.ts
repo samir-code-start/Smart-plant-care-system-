@@ -2,7 +2,7 @@
 // Fetches recent ThingSpeak feeds for trend charting.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { fetchRecentFeeds } from './_shared/thingspeakClient';
+import { fetchRecentFeeds } from './_shared/thingspeakClient.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {

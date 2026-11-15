@@ -2,7 +2,7 @@
 // Fetches recent manual moisture readings from Supabase.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getSupabaseClient } from './_shared/supabaseClient';
+import { getSupabaseClient } from './_shared/supabaseClient.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {

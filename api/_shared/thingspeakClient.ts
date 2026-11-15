@@ -1,6 +1,6 @@
 // ThingSpeak HTTP client — fetches sensor data from ThingSpeak REST API
 
-import type { ThingSpeakChannelResponse, ThingSpeakFeed } from './types';
+import type { ThingSpeakChannelResponse, ThingSpeakFeed } from './types.js';
 
 const THINGSPEAK_BASE_URL = 'https://api.thingspeak.com';
 

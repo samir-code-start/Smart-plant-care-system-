@@ -2,8 +2,8 @@
 // Validates and stores a manual moisture reading in Supabase.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getSupabaseClient } from './_shared/supabaseClient';
-import { VALID_PLANT_IDS, VALID_GROWTH_STAGES, VALID_MOISTURE_STATUSES } from './_shared/types';
+import { getSupabaseClient } from './_shared/supabaseClient.js';
+import { VALID_PLANT_IDS, VALID_GROWTH_STAGES, VALID_MOISTURE_STATUSES } from './_shared/types.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
